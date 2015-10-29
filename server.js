@@ -8,20 +8,21 @@ const baseUrl = 'http://redash-server-production-vpc-01.socialcodedev.com:5000'
 const loginUrl = `${baseUrl}/login`
 const apiUrl = `${baseUrl}/api`
 
-app.get('/', (req, res) => {
-  res.send('hello world')
-})
+const credentials = {
+  email: 'admin',
+  password: 'admin'
+}
 
-app.get('/login', (req, res) => {
-  request.post(loginUrl, {
-    form: {
-      email: 'admin',
-      password: 'admin'
-    }
+const login = (url, credentials) => {
+  request.post(url, {
+    form: credentials
   }, (err, resp, body) => {
     if (err) return console.log(err)
-    return res.send(body)
   })
+}
+
+app.get('/', (req, res) => {
+  res.send('hello world')
 })
 
 app.get('/:entity/:id', (req, res) => {
@@ -31,6 +32,8 @@ app.get('/:entity/:id', (req, res) => {
     res.send(body)
   })
 })
+
+login(loginUrl, credentials)
 
 const server = app.listen(3000, () => {
   console.log('server running')
